@@ -1,0 +1,32 @@
+Sub CountUniqueTexts()
+    Dim ws As Worksheet
+    Dim rng As Range
+    Dim cell As Range
+    Dim dict As Object
+    Dim uniqueCount As Long
+
+    ' 设置工作表
+    Set ws = ThisWorkbook.Sheets("Sheet1") ' 请根据实际情况修改工作表名称
+    ' 设置要检查的范围
+    Set rng = ws.Range("C2:C" & ws.Cells(ws.Rows.Count, "C").End(xlUp).Row) ' 从C2到C列最后一个非空单元格
+
+    ' 创建一个字典对象来存储唯一的文本
+    Set dict = CreateObject("Scripting.Dictionary")
+
+    ' 初始化不重复文本计数
+    uniqueCount = 0
+
+    ' 遍历指定范围内的每个单元格
+    For Each cell In rng
+        If cell.Value <> "" Then ' 确保单元格不为空
+            ' 如果字典中没有这个值，添加它并增加计数
+            If Not dict.Exists(cell.Value) Then
+                dict.Add cell.Value, True
+                uniqueCount = uniqueCount + 1
+            End If
+        End If
+    Next cell
+
+    ' 显示结果
+    MsgBox "不重复文本的个数是: " & uniqueCount
+End Sub
