@@ -1,0 +1,37 @@
+Sub ReplaceMultipleCurrencySymbols()
+    Dim rng As Range
+    Dim cell As Range
+    Dim currencyDict As Object ' 创建一个字典对象来存储货币缩写和中文名称
+    Dim currencyAbbreviation As Variant
+    Dim chineseCurrency As String
+    
+    ' 初始化货币缩写和中文名称的字典
+    Set currencyDict = CreateObject("Scripting.Dictionary")
+    currencyDict.Add "HKD", "港币"
+    currencyDict.Add "USD", "美元"
+    currencyDict.Add "EUR", "欧元"
+    currencyDict.Add "AUD", "澳元"
+    currencyDict.Add "CNY", "人民币"
+    ' ... 添加其他货币缩写和中文名称
+    
+    ' 使用InputBox让用户选择单元格区域
+    ' 如果直接指定区域，可以使用：Set rng = ThisWorkbook.Sheets("Sheet1").Range("A:A")根据实际情况修改工作表名称
+    Set rng = Application.InputBox("请选择要替换货币符号的单元格区域:", Type:=8)
+    
+    ' 如果用户取消了选择，退出宏
+    If rng Is Nothing Then Exit Sub
+    
+    ' 遍历选定区域的每一行
+    For Each cell In rng.Rows
+        ' 遍历单元格中的每个货币缩写
+        For Each currencyAbbreviation In currencyDict.Keys
+            ' 检查单元格是否包含货币缩写
+            If InStr(cell.Value, currencyAbbreviation) > 0 Then
+                ' 使用Replace方法替换货币缩写
+                cell.Value = Replace(cell.Value, currencyAbbreviation, currencyDict(currencyAbbreviation))
+            End If
+        Next currencyAbbreviation
+    Next cell
+    ' 释放内存
+    Set currencyDict = Nothing
+End Sub
